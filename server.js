@@ -1,6 +1,10 @@
 var express = require('express');
 var app = express();
-var router = express.Router();
+var articlesRoute = require('./routes/articles.js')
+var productsRoute = require('./routes/products.js')
+
+app.use('/articles', articlesRoute);
+app.use('/products', productsRoute);
 
 app.listen(8080, function(){
   console.log('App Listening!');
