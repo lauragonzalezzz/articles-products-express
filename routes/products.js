@@ -15,17 +15,23 @@ productsRoute.post('/', function(req, res) {
 
 		var dbData = JSON.parse(data.toString());
 		
-
 		if (err) {
 			res.send(err);
 		}
-		
 		productData.id = dbData.currentId;
-		console.log(productData);
-	});
+		
+		dbData.products.push(productData);
+		dbData.currentId++;
+		dbData = JSON.stringify(dbData);
 
-  
-  res.send('ALL GOOD');
+		fs.writeFile('./db/products.js', dbData, function(err){
+			
+			if (err) {
+				res.send(err);
+			}
+		});
+	});
+  res.send({'success': true});
 });
 
 
