@@ -1,4 +1,1 @@
-{
-	"currentId": 0,
-	"products": null
-}
+{"currentId":0,"products":[]}
