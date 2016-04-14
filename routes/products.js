@@ -33,6 +33,7 @@ productsRoute.post('/', function(req, res) {
 });
 
 productsRoute.put('/:id', function(req, res){
+  console.log('hello');
   var updatedData = req.body;
 
   fs.readFile('./db/products.js', function(err, data){
@@ -104,5 +105,20 @@ productsRoute.get('/', function(req, res){
     res.render('index', { "products" : myProducts });
   });
 });
+
+productsRoute.get('/:id/edit', function(req, res){
+  var id = 'id' + req.params.id
+
+  fs.readFile('./db/products.js', function(err, data){
+    if (err){
+      res.send({ "success" : false });
+    }
+
+    var myData = JSON.parse(data.toString());
+    var productToEdit = myData.products[id];
+    res.render('edit', { "product" : productToEdit });
+  });
+});
+
 
 module.exports = productsRoute;
