@@ -1,1 +1,1 @@
-{"currentId":0,"products":[]}
+{"products":{}}
