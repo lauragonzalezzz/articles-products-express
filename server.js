@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var articlesRoute = require('./routes/articles.js')
 var productsRoute = require('./routes/products.js')
-var jade = require('jade');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override')
 
