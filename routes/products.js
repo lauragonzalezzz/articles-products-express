@@ -7,6 +7,7 @@ productsRoute.use(bodyParser.urlencoded({
   extended: true
 }));
 
+//POST
 productsRoute.post('/', function(req, res) {
 
 	var productData = req.body;
@@ -32,8 +33,9 @@ productsRoute.post('/', function(req, res) {
   res.send({'success': true});
 });
 
+//PUT ID
 productsRoute.put('/:id', function(req, res){
-  console.log('hello');
+  console.log(req.body);
   var updatedData = req.body;
 
   fs.readFile('./db/products.js', function(err, data){
@@ -69,6 +71,7 @@ productsRoute.put('/:id', function(req, res){
   res.send({'success': true});
 });
 
+//DELETE ID
 productsRoute.delete('/:id', function(req, res){
 
   var productData = req.body;
@@ -94,6 +97,7 @@ productsRoute.delete('/:id', function(req, res){
   res.send({'success': true});
 });
 
+//GET
 productsRoute.get('/', function(req, res){
   fs.readFile('./db/products.js', function(err, data){
     if (err){
@@ -106,6 +110,7 @@ productsRoute.get('/', function(req, res){
   });
 });
 
+//GET ID EDIT
 productsRoute.get('/:id/edit', function(req, res){
   var id = 'id' + req.params.id
 
