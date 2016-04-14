@@ -10,6 +10,7 @@ productsRoute.use(bodyParser.urlencoded({
 //POST
 productsRoute.post('/', function(req, res) {
 	var productData = req.body;
+  console.log(req.body);
 
 	fs.readFile('./db/products.js', function(err, data){
 
@@ -122,6 +123,11 @@ productsRoute.get('/:id/edit', function(req, res){
     console.log('myData[idNum]',myData[idNum]);
     res.render('edit', { "product" : productToEdit });
   });
+});
+
+//GET NEW
+productsRoute.get('/new', function(req, res){
+  res.render('new');
 });
 
 
