@@ -1,0 +1,18 @@
+block title
+  title New Product
+
+block content
+  form(method='POST', action="/products" enctype="application/x-www-form-urlencoded")
+    label Product Name
+    input(type='text' name="name" placeholder="Product Name")
+    br
+    label Id Number
+    input(type='text' name="id" placeholder="Product Id Number")
+    br
+    label Price
+    input(type='text' name="price" placeholder="Product Price")
+    br
+    label Inventory
+    input(type='text' name="inventory" placeholder="Product Quantity")
+    br
+    button.btn.btn-success(type='submit') Submit
