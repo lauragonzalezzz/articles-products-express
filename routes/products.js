@@ -16,18 +16,16 @@ productsRoute.post('/', function(req, res) {
 		var dbData = JSON.parse(data.toString());
 
 		if (err) {
-			res.send(err);
+			res.send({'success': false});
 		}
-		productData.id = dbData.currentId;
-
-		dbData.products.push(productData);
-		dbData.currentId++;
+    var id = "id" + productData.id;
+    dbData.products[id] = productData;
 		dbData = JSON.stringify(dbData);
 
 		fs.writeFile('./db/products.js', dbData, function(err){
 
 			if (err) {
-				res.send(err);
+				res.send({'success': false});
 			}
 		});
 	});
@@ -42,7 +40,7 @@ productsRoute.put('/:id', function(req, res){
     var dbData = JSON.parse(data.toString());
 
     if (err) {
-      res.send(err);
+      res.send({'success': false});
     }
 
     var storedObj = dbData.products[updatedData.id];
@@ -61,13 +59,38 @@ productsRoute.put('/:id', function(req, res){
     fs.writeFile('./db/products.js', dbData, function(err){
 
       if (err) {
-        res.send(err);
+        res.send({'success': false});
       }
 
     });
 
   });
-  res.send('Thumbs up');
+  res.send({'success': true});
+});
+
+productsRoute.delete('/:id', function(req, res){
+
+  var productData = req.body;
+
+  fs.readFile('./db/products.js', function(err, data){
+
+    var dbData = JSON.parse(data.toString());
+
+    if (err) {
+      res.send(err);
+    }
+    var id = "id" + productData.id;
+    delete dbData.products[id];
+    dbData = JSON.stringify(dbData);
+
+    fs.writeFile('./db/products.js', dbData, function(err){
+
+      if (err) {
+        res.send({'success': false});
+      }
+    });
+  });
+  res.send({'success': true});
 });
 
 module.exports = productsRoute;
