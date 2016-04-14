@@ -9,7 +9,6 @@ productsRoute.use(bodyParser.urlencoded({
 
 //POST
 productsRoute.post('/', function(req, res) {
-
 	var productData = req.body;
 
 	fs.readFile('./db/products.js', function(err, data){
@@ -20,7 +19,7 @@ productsRoute.post('/', function(req, res) {
 			res.send({'success': false});
 		}
     var id = "id" + productData.id;
-    dbData.products[id] = productData;
+    dbData[id] = productData;
 		dbData = JSON.stringify(dbData);
 
 		fs.writeFile('./db/products.js', dbData, function(err){
@@ -35,8 +34,8 @@ productsRoute.post('/', function(req, res) {
 
 //PUT ID
 productsRoute.put('/:id', function(req, res){
-  console.log(req.body);
   var updatedData = req.body;
+  var updatedId = "id" + updatedData.id
 
   fs.readFile('./db/products.js', function(err, data){
 
@@ -46,7 +45,7 @@ productsRoute.put('/:id', function(req, res){
       res.send({'success': false});
     }
 
-    var storedObj = dbData.products[updatedData.id];
+    var storedObj = dbData[updatedId];
     if (updatedData.hasOwnProperty('name')){
       storedObj.name = updatedData.name
     }
@@ -84,7 +83,7 @@ productsRoute.delete('/:id', function(req, res){
       res.send(err);
     }
     var id = "id" + productData.id;
-    delete dbData.products[id];
+    delete dbData[id];
     dbData = JSON.stringify(dbData);
 
     fs.writeFile('./db/products.js', dbData, function(err){
@@ -105,14 +104,13 @@ productsRoute.get('/', function(req, res){
     }
 
     var myData = JSON.parse(data.toString());
-    var myProducts = myData.products;
-    res.render('index', { "products" : myProducts });
+    res.render('index', { "products" : myData });
   });
 });
 
 //GET ID EDIT
 productsRoute.get('/:id/edit', function(req, res){
-  var id = 'id' + req.params.id
+  var idNum = 'id' + req.params.id
 
   fs.readFile('./db/products.js', function(err, data){
     if (err){
@@ -120,7 +118,8 @@ productsRoute.get('/:id/edit', function(req, res){
     }
 
     var myData = JSON.parse(data.toString());
-    var productToEdit = myData.products[id];
+    var productToEdit = myData[idNum];
+    console.log('myData[idNum]',myData[idNum]);
     res.render('edit', { "product" : productToEdit });
   });
 });
