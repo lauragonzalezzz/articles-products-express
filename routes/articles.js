@@ -16,7 +16,7 @@ articlesRoute.post('/', function(req, res){
       res.send({'success': false});
     }
 
-    dbData[article.title] = { 'body' : article.body, 'author' : article.author, 'urlTitle' : urlTitle }
+    dbData[article.title] = { 'title' : article.title, 'body' : article.body, 'author' : article.author, 'urlTitle' : urlTitle }
     dbData = JSON.stringify(dbData);
 
     fs.writeFile('./db/articles.js', dbData, function(err){
@@ -48,6 +48,9 @@ articlesRoute.put('/:title', function(req, res){
     }
 
     var storedObj = dbData[updatedTitle];
+    if (updatedData.hasOwnProperty('title')){
+      storedObj.title = updatedData.title
+    }
     if (updatedData.hasOwnProperty('body')){
       storedObj.body = updatedData.body
     }
@@ -95,6 +98,23 @@ articlesRoute.delete('/:title', function(req, res){
     });
   });
   res.send({'success': true});
+});
+
+//GET
+articlesRoute.get('/', function(req, res){
+  fs.readFile('./db/articles.js', function(err, data){
+    if (err){
+      res.send({ "success" : false });
+    }
+
+    var myData = JSON.parse(data.toString());
+    res.render('./articles/index', { "articles" : myData });
+  });
+});
+
+//GET NEW
+articlesRoute.get('/new', function(req, res){
+  res.render('./articles/new');
 });
 
 
