@@ -93,4 +93,16 @@ productsRoute.delete('/:id', function(req, res){
   res.send({'success': true});
 });
 
+productsRoute.get('/', function(req, res){
+  fs.readFile('./db/products.js', function(err, data){
+    if (err){
+      res.send({ "success" : false });
+    }
+
+    var myData = JSON.parse(data.toString());
+    var myProducts = myData.products;
+    res.render('index', { "products" : myProducts });
+  });
+});
+
 module.exports = productsRoute;
