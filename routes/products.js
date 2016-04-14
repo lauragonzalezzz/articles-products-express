@@ -105,7 +105,7 @@ productsRoute.get('/', function(req, res){
     }
 
     var myData = JSON.parse(data.toString());
-    res.render('index', { "products" : myData });
+    res.render('./products/index', { "products" : myData });
   });
 });
 
@@ -121,13 +121,13 @@ productsRoute.get('/:id/edit', function(req, res){
     var myData = JSON.parse(data.toString());
     var productToEdit = myData[idNum];
     console.log('myData[idNum]',myData[idNum]);
-    res.render('edit', { "product" : productToEdit });
+    res.render('./products/edit', { "product" : productToEdit });
   });
 });
 
 //GET NEW
 productsRoute.get('/new', function(req, res){
-  res.render('new');
+  res.render('./products/new');
 });
 
 
