@@ -1,4 +1,7 @@
 articles-products-and-express
+
+https://github.com/devleague/articles-products-and-express
+
 Goal
 
 Build a mock application which will have 2 resources: Products and Articles. Each resource will have an implementation of CRUD (create, read, update, delete). You should make use of Express' Router module to keep your code organized. Routes go in a directory called routes.
