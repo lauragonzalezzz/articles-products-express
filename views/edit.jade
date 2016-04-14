@@ -1,0 +1,17 @@
+block title
+  title Products!
+
+block content
+  div
+    h2='Product Name: '+product.name
+    h3='Item Number: '+product.id
+    p='Price: $'+product.price
+    p='Quantity: '+product.inventory
+  form(method='POST', action="/products/"+product.id+"?_method=PUT")
+    each val, key in product
+      label(for='') #{key}
+      input.form-control(type='text', value='#{val}')
+      br
+    button.btn.btn-success(type='submit') Submit
+
+
