@@ -80,7 +80,6 @@ module.exports = (function(data){
         storedObj.author = updatedData.author
       }
       dbData[newUrlTitle] = storedObj;
-      delete dbData[oldUrl];
       dbData = JSON.stringify(dbData);
       fs.writeFile('./db/articles.js', dbData, function(err){
 
