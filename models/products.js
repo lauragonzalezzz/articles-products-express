@@ -2,16 +2,25 @@ var fs = require('fs');
 
 module.exports = (function(data){
 
-  _all = function(){};
+  _all = function(cb){
+    fs.readFile('./db/products.js', function(err, data){
+      if (err){
+        return cb(err);
+      }
 
-  _add = function(data){
+      var myData = JSON.parse(data.toString());
+      return cb(null, myData);
+    });
+  };
+
+  _add = function(data, cb){
     var productData = data;
     fs.readFile('./db/products.js', function(err, data){
 
       var dbData = JSON.parse(data.toString());
 
       if (err) {
-        res.send({'success': false});
+        return cb(err);
       }
       var id = "id" + productData.id;
       dbData[id] = productData;
@@ -20,15 +29,28 @@ module.exports = (function(data){
       fs.writeFile('./db/products.js', dbData, function(err){
 
         if (err) {
-          res.send({'success': false});
+          return cb(err);
         }
+        return cb();
       });
     });
   };
 
-  _getById = function(){};
+  _getById = function(data, cb){
+    var idNum = data;
 
-  _editById = function(data){
+    fs.readFile('./db/products.js', function(err, data){
+      if (err){
+        return cb(err);
+      }
+
+      var myData = JSON.parse(data.toString());
+      var productToEdit = myData[idNum];
+      return cb(null, productToEdit);
+    });
+  };
+
+  _editById = function(data, cb){
 
     var updatedData = data;
     var updatedId = "id" + updatedData.id;
@@ -38,7 +60,7 @@ module.exports = (function(data){
       var dbData = JSON.parse(data.toString());
 
       if (err) {
-        return res.send({'success': false});
+        return cb(err);
       }
 
       var storedObj = dbData[updatedId];
@@ -57,22 +79,23 @@ module.exports = (function(data){
       fs.writeFile('./db/products.js', dbData, function(err){
 
         if (err) {
-          return res.send({'success': false});
+          return cb(err);
         }
 
+        cb();
       });
 
     });
   };
 
-  _deleteById = function(data){
+  _deleteById = function(data, cb){
     var productId = "id" + data;
     fs.readFile('./db/products.js', function(err, data){
 
       var dbData = JSON.parse(data.toString());
 
       if (err) {
-        res.send(err);
+        return cb(err);
       }
       delete dbData[productId];
       dbData = JSON.stringify(dbData);
@@ -80,8 +103,9 @@ module.exports = (function(data){
       fs.writeFile('./db/products.js', dbData, function(err){
 
         if (err) {
-          res.send({'success': false});
+          return cb(err);
         }
+        return cb();
       });
     });
   };

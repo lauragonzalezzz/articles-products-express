@@ -19,11 +19,11 @@ productsRoute.post('/', function(req, res) {
 
   productModule.add(productData, function(err){
     if (err){
-      res.send({ "success" : false });
+      return res.send({ "success" : false });
     }
+    return res.send({'success': true});
   })
 
-  res.send({'success': true});
 });
 
 //PUT ID
@@ -31,13 +31,13 @@ productsRoute.put('/:id', function(req, res){
 
   var updatedData = { "id" : req.body.id, "name" : req.body.name, "price" : req.body.price, "inventory" : req.body.inventory};
 
-  productModule.editByTitle(updatedData, function(err){
+  productModule.editById(updatedData, function(err){
     if (err){
       return res.send({"success" : false });
     }
+    return res.send({'success': true});
   });
 
-  return res.send({'success': true});
 });
 
 //DELETE ID
@@ -49,19 +49,18 @@ productsRoute.delete('/:id', function(req, res){
     if (err){
       return res.send({"success" : false });
     }
+    return res.send({'success': true});
   });
-  return res.send({'success': true});
 });
 
 //GET
 productsRoute.get('/', function(req, res){
-  fs.readFile('./db/products.js', function(err, data){
-    if (err){
-      res.send({ "success" : false });
-    }
 
-    var myData = JSON.parse(data.toString());
-    res.render('./products/index', { "products" : myData });
+  productModule.all(function(err, products){
+    if (err){
+      return res.send({"success" : false });
+    }
+    res.render('./products/index', { "products" : products });
   });
 });
 
@@ -69,15 +68,11 @@ productsRoute.get('/', function(req, res){
 productsRoute.get('/:id/edit', function(req, res){
   var idNum = 'id' + req.params.id
 
-  fs.readFile('./db/products.js', function(err, data){
+  productModule.getById(idNum, function(err, product){
     if (err){
-      res.send({ "success" : false });
+      return res.send({"success" : false });
     }
-
-    var myData = JSON.parse(data.toString());
-    var productToEdit = myData[idNum];
-    console.log('myData[idNum]',myData[idNum]);
-    res.render('./products/edit', { "product" : productToEdit });
+    res.render('./products/edit', { "product" : product });
   });
 });
 
@@ -85,6 +80,5 @@ productsRoute.get('/:id/edit', function(req, res){
 productsRoute.get('/new', function(req, res){
   res.render('./products/new');
 });
-
 
 module.exports = productsRoute;
