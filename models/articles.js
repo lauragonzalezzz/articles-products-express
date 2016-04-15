@@ -93,15 +93,18 @@ module.exports = (function(data){
 
   _deleteByTitle = function(data, cb){
     var titleToDelete = data;
+    console.log('titleToDelete',titleToDelete);
 
     fs.readFile('./db/articles.js', function(err, data){
 
-      var dbData = JSON.parse(data.toString());
 
       if (err){
         return cb(err);
       }
-
+      var dbData = JSON.parse(data.toString());
+      if (dbData.titleToDelete === undefined){
+        return cb(new Error("No such title"));
+      }
       delete dbData[titleToDelete];
       dbData = JSON.stringify(dbData);
 
