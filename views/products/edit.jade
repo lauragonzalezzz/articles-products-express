@@ -2,11 +2,7 @@ block title
   title Products!
 
 block content
-  div
-    h2='Product Name: '+product.name
-    h3='Item Number: '+product.id
-    p='Price: $'+product.price
-    p='Quantity: '+product.inventory
+  header New Product
   form(method='POST', action="/products/"+product.id enctype="application/x-www-form-urlencoded")
     each val, key in product
       label(for='') #{key}
