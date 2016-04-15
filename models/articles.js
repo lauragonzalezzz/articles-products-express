@@ -92,18 +92,20 @@ module.exports = (function(data){
         return cb();
       });
     });
-  };
+  }; //DONE
 
   _deleteByTitle = function(data, cb){
-    var productId = "id" + data;
+    var titleToDelete = data;
+
     fs.readFile('./db/articles.js', function(err, data){
 
       var dbData = JSON.parse(data.toString());
 
-      if (err) {
+      if (err){
         return cb(err);
       }
-      delete dbData[productId];
+
+      delete dbData[titleToDelete];
       dbData = JSON.stringify(dbData);
 
       fs.writeFile('./db/articles.js', dbData, function(err){

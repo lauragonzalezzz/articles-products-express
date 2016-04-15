@@ -38,27 +38,14 @@ articlesRoute.put('/:title', function(req, res){
 
 //DELETE TITLE
 articlesRoute.delete('/:title', function(req, res){
-  var toDelete = req.params.title;
+  var toDelete = encodeURIComponent(req.params.title);
 
-  fs.readFile('./db/articles.js', function(err, data){
-
-    var dbData = JSON.parse(data.toString());
-
+  articleModule.deleteByTitle(toDelete, function(err){
     if (err){
-      res.send({"success" : false });
+      return res.send({"success": false });
     }
-
-    delete dbData[toDelete];
-    dbData = JSON.stringify(dbData);
-
-    fs.writeFile('./db/articles.js', dbData, function(err){
-
-      if (err) {
-        res.send({'success': false});
-      }
-    });
+    return res.send({"success" : true });
   });
-  res.send({'success': true});
 });
 
 //GET
