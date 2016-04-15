@@ -3,18 +3,13 @@ var productsRoute = express.Router();
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var productModule = require('../models/products.js');
+var validation = require('../middleware/validation');
 
 productsRoute.use(bodyParser.urlencoded({extended: true}));
 
 //POST
-productsRoute.post('/', function(req, res) {
+productsRoute.post('/', validation({"id" : "number", "name" : "string", "price" : "number", "inventory" : "number"}),function(req, res) {
 
-  if (!req.body.hasOwnProperty('id') ||
-    !req.body.hasOwnProperty('name') ||
-    !req.body.hasOwnProperty('price') ||
-    !req.body.hasOwnProperty('inventory')){
-    return res.send({'success': false, "Required Fields" : "Name, Id, Price, Inventory"})
-  }
   var productData = { "id" : req.body.id, "name" : req.body.name, "price" : req.body.price, "inventory" : req.body.inventory};
 
   productModule.add(productData, function(err){
