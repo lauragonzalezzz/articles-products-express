@@ -8,7 +8,7 @@ var validation = require('../middleware/validation');
 productsRoute.use(bodyParser.urlencoded({extended: true}));
 
 //POST
-productsRoute.post('/', validation({"id" : "number", "name" : "string", "price" : "number", "inventory" : "number"}),function(req, res) {
+productsRoute.post('/', validation({"id" : "number", "name" : "string", "price" : "number", "inventory" : "number"}), function(req, res) {
 
   var productData = { "id" : req.body.id, "name" : req.body.name, "price" : req.body.price, "inventory" : req.body.inventory};
 
@@ -22,7 +22,7 @@ productsRoute.post('/', validation({"id" : "number", "name" : "string", "price" 
 });
 
 //PUT ID
-productsRoute.put('/:id', function(req, res){
+productsRoute.put('/:id', validation({"id" : "number", "name" : "string", "price" : "number", "inventory" : "number"}), function(req, res){
 
   var updatedData = { "id" : req.body.id, "name" : req.body.name, "price" : req.body.price, "inventory" : req.body.inventory};
 
