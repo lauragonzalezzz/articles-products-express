@@ -33,8 +33,10 @@ articlesRoute.post('/', function(req, res){
 
 //PUT TITLE
 articlesRoute.put('/:title', function(req, res){
+
   var updatedData = req.body;
-  var updatedTitle = updatedData.title;
+  var updatedUrl = updatedData.urlTitle;
+  console.log('updatedData.title',updatedData.urlTitle);
 
   fs.readFile('./db/articles.js', function(err, data){
 
@@ -43,11 +45,11 @@ articlesRoute.put('/:title', function(req, res){
     if (err) {
       res.send({'success': false});
     }
-    if (!dbData[updatedTitle]){
+    if (!dbData[updatedUrl]){
       res.send({'success': false});
     }
-
-    var storedObj = dbData[updatedTitle];
+    console.log('dbData',dbData);
+    var storedObj = dbData[updatedUrl];
     if (updatedData.hasOwnProperty('title')){
       storedObj.title = updatedData.title
     }
@@ -72,7 +74,7 @@ articlesRoute.put('/:title', function(req, res){
     });
 
   });
-  res.send({'success': true});
+  // res.send({'success': true});
 });
 
 //DELETE TITLE
@@ -109,6 +111,21 @@ articlesRoute.get('/', function(req, res){
 
     var myData = JSON.parse(data.toString());
     res.render('./articles/index', { "articles" : myData });
+  });
+});
+
+//GET TITLE EDIT
+articlesRoute.get('/:title/edit', function(req, res){
+  var title = req.params.title
+
+  fs.readFile('./db/articles.js', function(err, data){
+    if (err){
+      res.send({ "success" : false });
+    }
+
+    var myData = JSON.parse(data.toString());
+    var articleToEdit = myData[title];
+    res.render('./articles/edit', { "article" : articleToEdit });
   });
 });
 
