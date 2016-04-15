@@ -2,16 +2,11 @@ var express = require('express');
 var articlesRoute = express.Router();
 var bodyParser = require('body-parser');
 var fs = require('fs');
-var articleModule = require('../models/articles')
+var articleModule = require('../models/articles');
+var validation = require('../middleware/validation');
 
 //POST
-articlesRoute.post('/', function(req, res){
-
-  if (!req.body.hasOwnProperty('title') ||
-    !req.body.hasOwnProperty('author') ||
-    !req.body.hasOwnProperty('body')){
-    return res.send({'success': false, "Required Fields" : "Name, Id, Price, Inventory"})
-  }
+articlesRoute.post('/', validation({"title" : "string", "author" : "string", "body" : "string"}), function(req, res){
 
   var article = { "title" : req.body.title, "author" : req.body.author, "body" : req.body.body};
 
@@ -24,7 +19,8 @@ articlesRoute.post('/', function(req, res){
 });
 
 //PUT TITLE
-articlesRoute.put('/:title', function(req, res){
+articlesRoute.put('/:title', validation({"title" : "string", "author" : "string", "body" : "string"}), function(req, res){
+
   var updatedData = req.body;
   var url = encodeURIComponent(req.params.title);
 
@@ -42,7 +38,7 @@ articlesRoute.delete('/:title', function(req, res){
 
   articleModule.deleteByTitle(toDelete, function(err){
     if (err){
-      return res.send({"success": false });
+      return res.send({"success": false, message : err.message });
     }
     return res.send({"success" : true });
   });
