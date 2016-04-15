@@ -2,79 +2,38 @@ var express = require('express');
 var articlesRoute = express.Router();
 var bodyParser = require('body-parser');
 var fs = require('fs');
+var articleModule = require('../models/articles')
 
 //POST
 articlesRoute.post('/', function(req, res){
-  var article = req.body;
-  var urlTitle = encodeURIComponent(req.body.title);
 
-  fs.readFile('./db/articles.js', function(err, data){
+  if (!req.body.hasOwnProperty('title') ||
+    !req.body.hasOwnProperty('author') ||
+    !req.body.hasOwnProperty('body')){
+    return res.send({'success': false, "Required Fields" : "Name, Id, Price, Inventory"})
+  }
 
-    var dbData = JSON.parse(data.toString());
+  var article = { "title" : req.body.title, "author" : req.body.author, "body" : req.body.body};
 
-    if (err) {
-      res.send({'success': false});
+  articleModule.add(article, function(err){
+    if (err){
+      return res.send({"success": false});
     }
-
-    dbData[article.title] = { 'title' : article.title, 'body' : article.body, 'author' : article.author, 'urlTitle' : urlTitle }
-    dbData = JSON.stringify(dbData);
-
-    fs.writeFile('./db/articles.js', dbData, function(err){
-
-      if (err) {
-        res.send({'success': false});
-      }
-    });
-
+    return res.send({"success": true});
   });
-
-  res.send({ 'success': true });
 });
 
 //PUT TITLE
 articlesRoute.put('/:title', function(req, res){
-
   var updatedData = req.body;
-  var updatedUrl = updatedData.urlTitle;
-  console.log('updatedData.title',updatedData.urlTitle);
+  var url = encodeURIComponent(req.params.title);
 
-  fs.readFile('./db/articles.js', function(err, data){
-
-    var dbData = JSON.parse(data.toString());
-
-    if (err) {
-      res.send({'success': false});
+  articleModule.editByTitle(updatedData, url, function(err){
+    if (err){
+      return res.send({"success" : false });
     }
-    if (!dbData[updatedUrl]){
-      res.send({'success': false});
-    }
-    console.log('dbData',dbData);
-    var storedObj = dbData[updatedUrl];
-    if (updatedData.hasOwnProperty('title')){
-      storedObj.title = updatedData.title
-    }
-    if (updatedData.hasOwnProperty('body')){
-      storedObj.body = updatedData.body
-    }
-    if (updatedData.hasOwnProperty('author')){
-      storedObj.author = updatedData.author
-    }
-    if (updatedData.hasOwnProperty('urlTitle')){
-      storedObj.urlTitle = updatedData.urlTitle
-    }
-
-    dbData = JSON.stringify(dbData);
-
-    fs.writeFile('./db/articles.js', dbData, function(err){
-
-      if (err) {
-        res.send({'success': false});
-      }
-
-    });
-
+    return res.send({"success" : true });
   });
-  // res.send({'success': true});
 });
 
 //DELETE TITLE
