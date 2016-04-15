@@ -10,7 +10,7 @@ module.exports = (function(data){
       var myData = JSON.parse(data.toString());
       return cb(null, myData);
     });
-  }; //DONE
+  };
 
   _add = function(data, cb){
     var article = data;
@@ -35,7 +35,7 @@ module.exports = (function(data){
         return cb();
       });
     });
-  }; //DONE
+  };
 
   _getByTitle = function(data, cb){
     var titleUrl = data;
@@ -48,7 +48,7 @@ module.exports = (function(data){
       var article = myData[titleUrl];
       return cb(null, article);
     });
-  }; //DONE
+  };
 
   _editByTitle = function(data, url, cb){
 
@@ -90,7 +90,7 @@ module.exports = (function(data){
         return cb();
       });
     });
-  }; //DONE
+  };
 
   _deleteByTitle = function(data, cb){
     var titleToDelete = data;
@@ -114,7 +114,7 @@ module.exports = (function(data){
         return cb();
       });
     });
-  }; //DONE
+  };
 
 
   return {
