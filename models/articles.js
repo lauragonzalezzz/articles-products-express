@@ -7,11 +7,10 @@ module.exports = (function(data){
       if (err){
         return cb(err);
       }
-
       var myData = JSON.parse(data.toString());
       return cb(null, myData);
     });
-  };
+  }; //DONE
 
   _add = function(data, cb){
     var article = data;
@@ -39,18 +38,17 @@ module.exports = (function(data){
   }; //DONE
 
   _getByTitle = function(data, cb){
-    var idNum = data;
+    var titleUrl = data;
 
     fs.readFile('./db/articles.js', function(err, data){
       if (err){
         return cb(err);
       }
-
       var myData = JSON.parse(data.toString());
-      var productToEdit = myData[idNum];
-      return cb(null, productToEdit);
+      var article = myData[titleUrl];
+      return cb(null, article);
     });
-  };
+  }; //DONE
 
   _editByTitle = function(data, url, cb){
 
@@ -116,7 +114,7 @@ module.exports = (function(data){
         return cb();
       });
     });
-  };
+  }; //DONE
 
 
   return {

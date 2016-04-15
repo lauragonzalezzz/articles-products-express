@@ -50,28 +50,25 @@ articlesRoute.delete('/:title', function(req, res){
 
 //GET
 articlesRoute.get('/', function(req, res){
-  fs.readFile('./db/articles.js', function(err, data){
-    if (err){
-      res.send({ "success" : false });
-    }
 
-    var myData = JSON.parse(data.toString());
-    res.render('./articles/index', { "articles" : myData });
+  articleModule.all(function(err, articles){
+    if (err){
+      return res.send({"success" : false });
+    }
+    return res.render('./articles/index', { "articles" : articles });
   });
+
 });
 
 //GET TITLE EDIT
 articlesRoute.get('/:title/edit', function(req, res){
-  var title = req.params.title
+  var titleUrl = encodeURIComponent(req.params.title)
 
-  fs.readFile('./db/articles.js', function(err, data){
+  articleModule.getByTitle(titleUrl, function(err, article){
     if (err){
-      res.send({ "success" : false });
+      return res.send({"success" : false });
     }
-
-    var myData = JSON.parse(data.toString());
-    var articleToEdit = myData[title];
-    res.render('./articles/edit', { "article" : articleToEdit });
+    return res.render('./articles/edit', { "article" : article });
   });
 });
 
