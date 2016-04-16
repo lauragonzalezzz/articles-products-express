@@ -20,7 +20,7 @@ articlesRoute.post('/', headerVal(), validation({"title" : "string", "author" : 
 });
 
 //PUT TITLE
-articlesRoute.put('/:title', validation({"title" : "string", "author" : "string", "body" : "string"}), function(req, res){
+articlesRoute.put('/:title', headerVal(), validation({"title" : "string", "author" : "string", "body" : "string"}), function(req, res){
 
   var updatedData = req.body;
   var url = encodeURIComponent(req.params.title);
