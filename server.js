@@ -8,6 +8,7 @@ var logModule = require('./middleware/logs.js');
 
 app.use(express.static('public'));
 app.set('view engine', 'jade');
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(function(req, res, next){
   logModule(req, res, next);
