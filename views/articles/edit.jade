@@ -2,11 +2,12 @@ block title
   title Article!
 
 block content
-  header New Article
-  form(method='POST', action="/articles/#{article.title}" enctype="application/x-www-form-urlencoded")
+  div
+    header Edit Article
     each val, key in article
       label #{key}
-      input(type="hidden" name="_method" value="PUT")
       input(type='text' name=key value='#{val}')
       br
-    button.btn.btn-success(type='submit') Submit
+      input#xhrUrl(type="hidden", value="http://localhost:8080/articles/#{article.urlTitle}")
+    button(id="submitBtn") Submit
+  script(src="/client.js")
