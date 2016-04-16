@@ -93,7 +93,6 @@ module.exports = (function(data){
 
   _deleteByTitle = function(data, cb){
     var titleToDelete = data;
-    console.log('titleToDelete',titleToDelete);
 
     fs.readFile('./db/articles.js', function(err, data){
 
