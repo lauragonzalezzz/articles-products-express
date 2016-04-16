@@ -1,11 +1,12 @@
 var express = require('express');
 var app = express();
-var articlesRoute = require('./routes/articles.js')
-var productsRoute = require('./routes/products.js')
+var articlesRoute = require('./routes/articles.js');
+var productsRoute = require('./routes/products.js');
 var bodyParser = require('body-parser');
-var methodOverride = require('method-override')
+var methodOverride = require('method-override');
 var logModule = require('./middleware/logs.js');
 
+app.use(express.static('public'));
 app.set('view engine', 'jade');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(function(req, res, next){
