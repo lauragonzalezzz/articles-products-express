@@ -22,6 +22,8 @@ app.use(methodOverride(function(req, res){
 app.use('/articles', articlesRoute);
 app.use('/products', productsRoute);
 
-app.listen(8080, function(){
-  console.log('App Listening!');
-});
+if(!module.parent){
+  var server = app.listen(8080, function(){
+  console.log("App Listening!");
+  });
+};
