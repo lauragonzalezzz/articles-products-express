@@ -7,7 +7,7 @@ var validation = require('../middleware/validation');
 var headerVal = require('../middleware/header-validation');
 
 
-//POST
+//POST //DONE
 articlesRoute.post('/', headerVal(), validation({"title" : "string", "author" : "string", "body" : "string"}), function(req, res){
   var article = { "title" : req.body.title, "author" : req.body.author, "body" : req.body.body};
 
@@ -56,17 +56,20 @@ articlesRoute.get('/', function(req, res){
 
 //GET TITLE EDIT
 articlesRoute.get('/:title/edit', function(req, res){
-  var titleUrl = encodeURIComponent(req.params.title)
+  var title = req.params.title
 
-  articleModule.getByTitle(titleUrl, function(err, article){
-    if (err){
-      return res.send({"success" : false });
-    }
+  articleModule.getByTitle(title)
+  .then(function(article){
     return res.render('./articles/edit', { "article" : article });
-  });
+  })
+  .catch(function(err){
+    if (err){
+      console.error(err);
+    }
+  })
 });
 
-//GET NEW
+//GET NEW  //DONE
 articlesRoute.get('/new', function(req, res){
   res.render('./articles/new');
 });
