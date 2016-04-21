@@ -11,13 +11,10 @@ var headerVal = require('../middleware/header-validation');
 articlesRoute.post('/', headerVal(), validation({"title" : "string", "author" : "string", "body" : "string"}), function(req, res){
   var article = { "title" : req.body.title, "author" : req.body.author, "body" : req.body.body};
 
-  articleModule.add(article, function(err){
-    if (err){
-      return res.send({"success": false});
-    }
-    return res.send({"success": true});
+  articleModule.add(article);
+  console.log('Article: ' + article.title + ' has been added.');
+  res.send({redirect : '/articles/'});
   });
-});
 
 //PUT TITLE
 articlesRoute.put('/:title', headerVal(), validation({"title" : "string", "author" : "string", "body" : "string"}), function(req, res){
