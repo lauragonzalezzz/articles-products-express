@@ -5,6 +5,7 @@ var fs = require('fs');
 var productModule = require('../models/products.js');
 var validation = require('../middleware/validation');
 
+
 productsRoute.use(bodyParser.urlencoded({extended: true}));
 
 //POST

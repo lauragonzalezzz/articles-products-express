@@ -6,9 +6,9 @@ var articleModule = require('../models/articles');
 var validation = require('../middleware/validation');
 var headerVal = require('../middleware/header-validation');
 
+
 //POST
 articlesRoute.post('/', headerVal(), validation({"title" : "string", "author" : "string", "body" : "string"}), function(req, res){
-
   var article = { "title" : req.body.title, "author" : req.body.author, "body" : req.body.body};
 
   articleModule.add(article, function(err){

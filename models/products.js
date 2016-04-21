@@ -14,6 +14,7 @@ module.exports = (function(data){
   };
 
   _add = function(data, cb){
+
     var productData = data;
     fs.readFile('./db/products.js', function(err, data){
 
@@ -51,7 +52,6 @@ module.exports = (function(data){
   };
 
   _editById = function(data, cb){
-
     var updatedData = data;
     var updatedId = "id" + updatedData.id;
 

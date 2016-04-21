@@ -28,3 +28,4 @@ if(!module.parent){
   console.log("App Listening!");
   });
 };
+module.exports = app;

@@ -1,7 +1,7 @@
 'use strict';
 const express = require('express');
 const request = require('supertest');
-const app = require('../routes/articles');
+const app = require('../server');
 
 describe('Article Router', function(){
 
