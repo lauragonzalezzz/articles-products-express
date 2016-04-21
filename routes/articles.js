@@ -60,7 +60,7 @@ articlesRoute.get('/:title/edit', function(req, res){
 
   articleModule.getByTitle(title)
   .then(function(article){
-    return res.render('./articles/edit', { "article" : article });
+    return res.render('./articles/edit', { "article" : article[0] });
   })
   .catch(function(err){
     if (err){
