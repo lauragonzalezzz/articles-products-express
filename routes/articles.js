@@ -48,12 +48,15 @@ articlesRoute.delete('/:title', function(req, res){
 //GET
 articlesRoute.get('/', function(req, res){
 
-  articleModule.all(function(err, articles){
-    if (err){
-      return res.send({"success" : false });
+  articleModule.all()
+  .then(function(article){
+    return res.render('./articles/index', { "articles" : article });
+  })
+  .catch(function(err){
+    if (err) {
+      res.send(error);
     }
-    return res.render('./articles/index', { "articles" : articles });
-  });
+  })
 
 });
 

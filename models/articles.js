@@ -1,66 +1,62 @@
 var fs = require('fs');
 var pgp = require('pg-promise')();
-var dbConn = require('../private.js');
+var dbConn = require('../private.json');
 var db = pgp(dbConn);
 
 module.exports = (function(data){
 
-  _all = function(cb){
-    fs.readFile('./db/articles.js', function(err, data){
-      if (err){
-        return cb(err);
-      }
-      var myData = JSON.parse(data.toString());
-      return cb(null, myData);
-    });
+  _all = function(){
+    return db.query('SELECT * FROM articles')
   };
 
   _add = function(data, cb){
     var article = data;
     var urlTitle = encodeURIComponent(article.title);
     article['urlTitle'] = urlTitle;
-    // fs.readFile('./db/articles.js', function(err, data){
+    fs.readFile('./db/articles.js', function(err, data){
 
-    //   var dbData = JSON.parse(data.toString());
+      var dbData = JSON.parse(data.toString());
 
-    //   if (err) {
-    //     return cb(err);
-    //   }
-
-    //   dbData[urlTitle] = { 'title' : article.title, 'body' : article.body, 'author' : article.author, 'urlTitle' : article.urlTitle }
-    //   dbData = JSON.stringify(dbData);
-
-    //   fs.writeFile('./db/articles.js', dbData, function(err){
-
-    //     if (err) {
-    //       return cb(err);
-    //     }
-    //     return cb();
-    //   });
-    // });
-
-    db.query('SELECT * FROM articles')
-    .then(function(articles){
-      res.send(articles);
-    })
-    .catch(function(err){
       if (err) {
-        res.send(err);
+        return cb(err);
       }
+
+      dbData[urlTitle] = { 'title' : article.title, 'body' : article.body, 'author' : article.author, 'urlTitle' : article.urlTitle }
+      dbData = JSON.stringify(dbData);
+
+      fs.writeFile('./db/articles.js', dbData, function(err){
+
+        if (err) {
+          return cb(err);
+        }
+        return cb();
+      });
     });
+
+    // db.query('SELECT * FROM articles')
+    // .then(function(articles){
+    //   res.send(articles);
+    // })
+    // .catch(function(err){
+    //   if (err) {
+    //     res.send(err);
+    //   }
+    // });
   };
 
   _getByTitle = function(data, cb){
     var titleUrl = data;
 
-    fs.readFile('./db/articles.js', function(err, data){
-      if (err){
-        return cb(err);
-      }
-      var myData = JSON.parse(data.toString());
-      var article = myData[titleUrl];
-      return cb(null, article);
-    });
+    // fs.readFile('./db/articles.js', function(err, data){
+    //   if (err){
+    //     return cb(err);
+    //   }
+    //   var myData = JSON.parse(data.toString());
+    //   var article = myData[titleUrl];
+    //   return cb(null, article);
+    // });
+
+
   };
 
   _editByTitle = function(data, url, cb){
