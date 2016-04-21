@@ -34,19 +34,13 @@ articlesRoute.put('/:title', headerVal(), validation({"title" : "string", "autho
 });
 
 //DELETE TITLE //DONE
-articlesRoute.get('/:title', function(req, res){
+articlesRoute.get('/:title/delete', function(req, res){
   var toDelete = req.params.title;
 
-  articleModule.deleteByTitle(toDelete);
-  articleModule.all()
-  .then(function(article){
-    return res.render('./articles/index', { "articles" : article });
-  })
-  .catch(function(err){
-    if (err) {
-      res.send(error);
-    }
-  })
+  //sends delete request
+  articleModule.deleteByTitle(toDelete)
+  console.log('Article: ' + toDelete + ' has been deleted.');
+  res.redirect('/');
 });
 
 //GET  //DONE
