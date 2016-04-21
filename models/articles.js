@@ -101,29 +101,31 @@ module.exports = (function(data){
   };
 
   _deleteByTitle = function(data, cb){
-    var titleToDelete = data;
+    var titleToDelete = decodeURIComponent(data);
+    var query = 'DELETE FROM articles WHERE articles.title =' + titleToDelete;
+    console.log('query',query);
 
-    fs.readFile('./db/articles.js', function(err, data){
+    // fs.readFile('./db/articles.js', function(err, data){
 
 
-      if (err){
-        return cb(err);
-      }
-      var dbData = JSON.parse(data.toString());
-      if (dbData.titleToDelete === undefined){
-        return cb(new Error("No such title"));
-      }
-      delete dbData[titleToDelete];
-      dbData = JSON.stringify(dbData);
+    //   if (err){
+    //     return cb(err);
+    //   }
+    //   var dbData = JSON.parse(data.toString());
+    //   if (dbData.titleToDelete === undefined){
+    //     return cb(new Error("No such title"));
+    //   }
+    //   delete dbData[titleToDelete];
+    //   dbData = JSON.stringify(dbData);
 
-      fs.writeFile('./db/articles.js', dbData, function(err){
+    //   fs.writeFile('./db/articles.js', dbData, function(err){
 
-        if (err) {
-          return cb(err);
-        }
-        return cb();
-      });
-    });
+    //     if (err) {
+    //       return cb(err);
+    //     }
+    //     return cb();
+    //   });
+    // });
   };
 
 
