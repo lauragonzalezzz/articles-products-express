@@ -60,7 +60,7 @@ module.exports = (function(data){
   };
 
   _editByTitle = function(data, url, cb){
-
+    console.log('in model - edit by title');
     var updatedData = data;
     var oldUrl = url;
 
@@ -102,8 +102,18 @@ module.exports = (function(data){
 
   _deleteByTitle = function(data, cb){
     var titleToDelete = decodeURIComponent(data);
+    var selectQuery = 'SELECT * FROM articles WHERE articles.title=' + "'" + titleToDelete + "'";
     var deleteQuery = 'DELETE FROM articles WHERE articles.title =' + "'" + titleToDelete + "'";
-    return db.query(deleteQuery)
+
+    db.query(selectQuery)
+    .then(function(article){
+      if (article[0].title === titleToDelete){
+        return db.query(deleteQuery)
+      }
+    })
+    .catch(function(error){
+      console.error(error, 'this is an error inside the model');
+    })
   };
 
 
