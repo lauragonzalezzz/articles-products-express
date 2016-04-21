@@ -15,5 +15,5 @@ submitBtn.addEventListener('click', function(event){
 });
 
 function createRequest(){
-  console.log(this.responseText);
+  window.location = this.responseURL;
 };
