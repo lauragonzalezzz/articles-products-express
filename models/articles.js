@@ -13,35 +13,11 @@ module.exports = (function(data){
     var article = data;
     var urlTitle = encodeURIComponent(article.title);
     article['urlTitle'] = urlTitle;
-    fs.readFile('./db/articles.js', function(err, data){
 
-      var dbData = JSON.parse(data.toString());
-
-      if (err) {
-        return cb(err);
-      }
-
-      dbData[urlTitle] = { 'title' : article.title, 'body' : article.body, 'author' : article.author, 'urlTitle' : article.urlTitle }
-      dbData = JSON.stringify(dbData);
-
-      fs.writeFile('./db/articles.js', dbData, function(err){
-
-        if (err) {
-          return cb(err);
-        }
-        return cb();
-      });
-    });
-
-    // db.query('SELECT * FROM articles')
-    // .then(function(articles){
-    //   res.send(articles);
-    // })
-    // .catch(function(err){
-    //   if (err) {
-    //     res.send(err);
-    //   }
-    // });
+    return db.query('INSERT INTO articles (title, body, author, urltitle) values ($1, $2, $3, $4)', [article.title, article.body, article.author, article.urlTitle])
+    .catch(function(err){
+      console.log(err);
+    })
   };
 
   _getByTitle = function(data, cb){
