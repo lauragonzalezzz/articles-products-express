@@ -22,7 +22,6 @@ module.exports = (function(data){
 
   _getByTitle = function(data){
     var titleUrl = data;
-    console.log(titleUrl);
     return db.query('SELECT * FROM articles WHERE title =$1', [titleUrl]);
   };
 
