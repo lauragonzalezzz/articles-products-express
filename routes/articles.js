@@ -34,18 +34,26 @@ articlesRoute.put('/:title', headerVal(), validation({"title" : "string", "autho
 });
 
 //DELETE TITLE
-articlesRoute.delete('/:title', function(req, res){
-  var toDelete = encodeURIComponent(req.params.title);
+articlesRoute.get('/:title', function(req, res){
+  var toDelete = req.params.title;
 
-  articleModule.deleteByTitle(toDelete, function(err){
-    if (err){
-      return res.send({"success": false, message : err.message });
+  articleModule.deleteByTitle(toDelete)
+
+  .then(function(){
+    articleModule.all();
+  })
+  .then(function(article){
+    return res.render('./articles/index', { "articles" : article });
+  })
+  .catch(function(err){
+    if (err) {
+      res.send(error);
     }
-    return res.send({"success" : true });
-  });
+  })
+
 });
 
-//GET
+//GET  //DONE
 articlesRoute.get('/', function(req, res){
 
   articleModule.all()
@@ -57,7 +65,6 @@ articlesRoute.get('/', function(req, res){
       res.send(error);
     }
   })
-
 });
 
 //GET TITLE EDIT
