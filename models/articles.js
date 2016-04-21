@@ -20,19 +20,10 @@ module.exports = (function(data){
     })
   };
 
-  _getByTitle = function(data, cb){
+  _getByTitle = function(data){
     var titleUrl = data;
-
-    // fs.readFile('./db/articles.js', function(err, data){
-    //   if (err){
-    //     return cb(err);
-    //   }
-    //   var myData = JSON.parse(data.toString());
-    //   var article = myData[titleUrl];
-    //   return cb(null, article);
-    // });
-
-
+    console.log(titleUrl);
+    return db.query('SELECT * FROM articles WHERE title =$1', [titleUrl]);
   };
 
   _editByTitle = function(data, url, cb){
