@@ -22,12 +22,9 @@ articlesRoute.put('/:title', headerVal(), validation({"title" : "string", "autho
   var updatedData = req.body;
   var url = encodeURIComponent(req.params.title);
 
-  articleModule.editByTitle(updatedData, url, function(err){
-    if (err){
-      return res.send({"success" : false });
-    }
-    return res.send({"success" : true });
-  });
+  articleModule.editByTitle(updatedData, url)
+  console.log('Article: ' + updatedData.title + ' has been updated');
+  res.redirect('/');
 });
 
 //DELETE TITLE //DONE
@@ -54,7 +51,7 @@ articlesRoute.get('/', function(req, res){
   })
 });
 
-//GET TITLE EDIT
+//GET TITLE EDIT //DONE
 articlesRoute.get('/:title/edit', function(req, res){
   var title = req.params.title
 
