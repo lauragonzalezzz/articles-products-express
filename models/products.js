@@ -13,31 +13,10 @@ module.exports = (function(data){
 
     var productData = data;
 
-    return db.query('INSERT INTO products (id, name, price, inventory) values ($1, $2, $3, $4)', [productData.id, productData.name, productData.price, productData.inventory])
+    return db.query('INSERT INTO products (name, price, inventory) values ($1, $2, $3)', [productData.name, productData.price, productData.inventory])
     .catch(function(err){
-      if (err){
         console.error(err);
-      }
-    })
-    // fs.readFile('./db/products.js', function(err, data){
-
-    //   var dbData = JSON.parse(data.toString());
-
-    //   if (err) {
-    //     return cb(err);
-    //   }
-    //   var id = "id" + productData.id;
-    //   dbData[id] = productData;
-    //   dbData = JSON.stringify(dbData);
-
-    //   fs.writeFile('./db/products.js', dbData, function(err){
-
-    //     if (err) {
-    //       return cb(err);
-    //     }
-    //     return cb();
-    //   });
-    // });
+      });
   };
 
   _getById = function(data, cb){
