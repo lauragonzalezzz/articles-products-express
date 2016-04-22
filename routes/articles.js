@@ -24,7 +24,7 @@ articlesRoute.put('/:title', headerVal(), validation({"title" : "string", "autho
 
   articleModule.editByTitle(updatedData, url)
   console.log('Article: ' + updatedData.title + ' has been updated');
-  res.redirect('/');
+  res.send({redirect : '/articles/'});
 });
 
 //DELETE TITLE
