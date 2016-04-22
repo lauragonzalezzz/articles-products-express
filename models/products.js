@@ -19,18 +19,9 @@ module.exports = (function(data){
       });
   };
 
-  _getById = function(data, cb){
+  _getById = function(data){
     var idNum = data;
-
-    fs.readFile('./db/products.js', function(err, data){
-      if (err){
-        return cb(err);
-      }
-
-      var myData = JSON.parse(data.toString());
-      var productToEdit = myData[idNum];
-      return cb(null, productToEdit);
-    });
+    return db.query('SELECT * FROM products WHERE id =$1', [idNum]);
   };
 
   _editById = function(data, cb){
