@@ -5,7 +5,7 @@ submitBtn.addEventListener('click', function(event){
   var inputs = this.parentNode.querySelectorAll('input[name]');
   var xhrUrl = document.getElementById('xhrUrl').value;
   var method = document.getElementById('method').value;
-  var payload = 'id=' + inputs[0].value + "&name=" + inputs[1].value + "&price=" + inputs[2].value + "&inventory=" + inputs[3].value;
+  var payload = "name=" + inputs[0].value + "&price=" + inputs[1].value + "&inventory=" + inputs[2].value;
   var headerReq = new XMLHttpRequest();
   headerReq.addEventListener('load', createRequest);
   headerReq.open(method, xhrUrl);
@@ -15,5 +15,5 @@ submitBtn.addEventListener('click', function(event){
 });
 
 function createRequest(){
-  console.log(this.responseText);
+  window.location = this.responseURL;
 };

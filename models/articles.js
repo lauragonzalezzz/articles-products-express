@@ -1,120 +1,58 @@
 var fs = require('fs');
+var pgp = require('pg-promise')();
+var dbConn = require('../private.json');
+var db = pgp(dbConn);
 
 module.exports = (function(data){
 
-  _all = function(cb){
-    fs.readFile('./db/articles.js', function(err, data){
-      if (err){
-        return cb(err);
-      }
-      var myData = JSON.parse(data.toString());
-      return cb(null, myData);
-    });
+  _all = function(){
+    return db.query('SELECT * FROM articles')
   };
 
   _add = function(data, cb){
     var article = data;
     var urlTitle = encodeURIComponent(article.title);
     article['urlTitle'] = urlTitle;
-    fs.readFile('./db/articles.js', function(err, data){
 
-      var dbData = JSON.parse(data.toString());
-
-      if (err) {
-        return cb(err);
-      }
-
-      dbData[urlTitle] = { 'title' : article.title, 'body' : article.body, 'author' : article.author, 'urlTitle' : article.urlTitle }
-      dbData = JSON.stringify(dbData);
-
-      fs.writeFile('./db/articles.js', dbData, function(err){
-
-        if (err) {
-          return cb(err);
-        }
-        return cb();
-      });
-    });
+    return db.query('INSERT INTO articles (title, body, author, urltitle) values ($1, $2, $3, $4)', [article.title, article.body, article.author, article.urlTitle])
+    .catch(function(err){
+      console.log(err);
+    })
   };
 
-  _getByTitle = function(data, cb){
+  _getByTitle = function(data){
     var titleUrl = data;
-
-    fs.readFile('./db/articles.js', function(err, data){
-      if (err){
-        return cb(err);
-      }
-      var myData = JSON.parse(data.toString());
-      var article = myData[titleUrl];
-      return cb(null, article);
-    });
+    return db.query('SELECT * FROM articles WHERE title =$1', [titleUrl]);
   };
 
-  _editByTitle = function(data, url, cb){
+  _editByTitle = function(data, url){
+    var updatedArticle = data;
+    var oldTitle = decodeURIComponent(url);
+    var newUrlTitle = encodeURIComponent(updatedArticle.title);
+    updatedArticle['urlTitle'] = newUrlTitle;
 
-    var updatedData = data;
-    var oldUrl = url;
-
-    fs.readFile('./db/articles.js', function(err, data){
-
-      var dbData = JSON.parse(data.toString());
-      if (err) {
-        return cb(err);
+    db.none('UPDATE articles SET title=$1, body=$2, author=$3, urltitle=$4 WHERE title=$5', [updatedArticle.title, updatedArticle.body, updatedArticle.author, updatedArticle.urlTitle, oldTitle])
+    .catch(function(err){
+      if (err){
+        console.error(err);
       }
-      if (!dbData[oldUrl]){
-        return cb(err);
-      }
-
-      var newUrlTitle = encodeURIComponent(updatedData.title);
-      var storedObj = {};
-      storedObj = dbData[oldUrl];
-
-      storedObj.urlTitle = newUrlTitle;
-      if (updatedData.hasOwnProperty('title')){
-        storedObj.title = updatedData.title
-      }
-      if (updatedData.hasOwnProperty('body')){
-        storedObj.body = updatedData.body
-      }
-      if (updatedData.hasOwnProperty('author')){
-        storedObj.author = updatedData.author
-      }
-      dbData[newUrlTitle] = storedObj;
-      dbData = JSON.stringify(dbData);
-      fs.writeFile('./db/articles.js', dbData, function(err){
-
-        if (err) {
-          return cb(err);
-        }
-        return cb();
-      });
     });
   };
 
   _deleteByTitle = function(data, cb){
-    var titleToDelete = data;
+    var titleToDelete = decodeURIComponent(data);
+    var selectQuery = 'SELECT * FROM articles WHERE articles.title=' + "'" + titleToDelete + "'";
+    var deleteQuery = 'DELETE FROM articles WHERE articles.title =' + "'" + titleToDelete + "'";
 
-    fs.readFile('./db/articles.js', function(err, data){
-
-
-      if (err){
-        return cb(err);
+    db.query(selectQuery)
+    .then(function(article){
+      if (article[0].title === titleToDelete){
+        return db.query(deleteQuery)
       }
-      var dbData = JSON.parse(data.toString());
-      if (dbData.titleToDelete === undefined){
-        return cb(new Error("No such title"));
-      }
-      delete dbData[titleToDelete];
-      dbData = JSON.stringify(dbData);
-
-      fs.writeFile('./db/articles.js', dbData, function(err){
-
-        if (err) {
-          return cb(err);
-        }
-        return cb();
-      });
-    });
+    })
+    .catch(function(error){
+      console.error(error, 'this is an error inside the model');
+    })
   };
 
 

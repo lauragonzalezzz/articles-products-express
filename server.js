@@ -25,7 +25,7 @@ app.use('/products', productsRoute);
 
 if(!module.parent){
   var server = app.listen(8080, function(){
-  console.log("App Listening!");
+  console.log("App Listening on port 8080!");
   });
 };
 module.exports = app;

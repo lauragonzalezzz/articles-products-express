@@ -1,113 +1,53 @@
 var fs = require('fs');
+var pgp = require('pg-promise')();
+var dbConn = require('../private.json');
+var db = pgp(dbConn);
 
 module.exports = (function(data){
 
   _all = function(cb){
-    fs.readFile('./db/products.js', function(err, data){
-      if (err){
-        return cb(err);
-      }
-
-      var myData = JSON.parse(data.toString());
-      return cb(null, myData);
-    });
+    return db.query('SELECT * FROM products')
   };
 
   _add = function(data, cb){
 
     var productData = data;
-    fs.readFile('./db/products.js', function(err, data){
 
-      var dbData = JSON.parse(data.toString());
-
-      if (err) {
-        return cb(err);
-      }
-      var id = "id" + productData.id;
-      dbData[id] = productData;
-      dbData = JSON.stringify(dbData);
-
-      fs.writeFile('./db/products.js', dbData, function(err){
-
-        if (err) {
-          return cb(err);
-        }
-        return cb();
+    return db.query('INSERT INTO products (name, price, inventory) values ($1, $2, $3)', [productData.name, productData.price, productData.inventory])
+    .catch(function(err){
+        console.error(err);
       });
-    });
   };
 
-  _getById = function(data, cb){
+  _getById = function(data){
     var idNum = data;
-
-    fs.readFile('./db/products.js', function(err, data){
-      if (err){
-        return cb(err);
-      }
-
-      var myData = JSON.parse(data.toString());
-      var productToEdit = myData[idNum];
-      return cb(null, productToEdit);
-    });
+    return db.query('SELECT * FROM products WHERE id =$1', [idNum]);
   };
 
-  _editById = function(data, cb){
+  _editById = function(data){
     var updatedData = data;
-    var updatedId = "id" + updatedData.id;
 
-    fs.readFile('./db/products.js', function(err, data){
-
-      var dbData = JSON.parse(data.toString());
-
-      if (err) {
-        return cb(err);
-      }
-
-      var storedObj = dbData[updatedId];
-      if (updatedData.hasOwnProperty('name')){
-        storedObj.name = updatedData.name
-      }
-      if (updatedData.hasOwnProperty('price')){
-        storedObj.price = updatedData.price
-      }
-      if (updatedData.hasOwnProperty('inventory')){
-        storedObj.inventory = updatedData.inventory
-      }
-
-      dbData = JSON.stringify(dbData);
-
-      fs.writeFile('./db/products.js', dbData, function(err){
-
-        if (err) {
-          return cb(err);
-        }
-
-        cb();
-      });
-
+    return db.none('UPDATE products SET name=$1, price=$2, inventory=$3 WHERE name=$4', [updatedData.name, updatedData.price, updatedData.inventory, updatedData.name])
+    .catch(function(err){
+        console.error(err);
     });
   };
 
   _deleteById = function(data, cb){
-    var productId = "id" + data;
-    fs.readFile('./db/products.js', function(err, data){
+    var productId = data;
 
-      var dbData = JSON.parse(data.toString());
-
-      if (err) {
-        return cb(err);
+    db.query('SELECT * FROM products WHERE products.id=' + productId)
+    .then(function(product){
+      if (product[0].id == productId){
+        return db.query('DELETE FROM products WHERE products.id=$1', [productId])
       }
-      delete dbData[productId];
-      dbData = JSON.stringify(dbData);
-
-      fs.writeFile('./db/products.js', dbData, function(err){
-
-        if (err) {
-          return cb(err);
-        }
-        return cb();
-      });
-    });
+      else {
+        console.log('Error: Product ' + productId + ' does not exist');
+      }
+    })
+    .catch(function(error){
+      console.error(error, 'this is an error inside the model');
+    })
   };
 
 

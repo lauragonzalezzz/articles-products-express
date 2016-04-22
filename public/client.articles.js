@@ -5,7 +5,7 @@ submitBtn.addEventListener('click', function(event){
   var inputs = this.parentNode.querySelectorAll('input[name]');
   var xhrUrl = document.getElementById('xhrUrl').value;
   var method = document.getElementById('method').value;
-  var payload = 'title=' + inputs[0].value + "&body=" + inputs[1].value + "&author=" + inputs[2].value + "&urlTitle=" + inputs[3].value;
+  var payload = 'title=' + inputs[0].value + "&body=" + inputs[1].value + "&author=" + inputs[2].value;
   var headerReq = new XMLHttpRequest();
   headerReq.addEventListener('load', createRequest);
   headerReq.open(method, xhrUrl);
@@ -15,5 +15,5 @@ submitBtn.addEventListener('click', function(event){
 });
 
 function createRequest(){
-  console.log(this.responseText);
+  window.location = this.responseURL;
 };

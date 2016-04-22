@@ -3,17 +3,17 @@ block title
 
 block content
   header New Product
-  form(method='POST', action="/products" enctype="application/x-www-form-urlencoded")
-    label Product Name
-    input(type='text' name="name" placeholder="Product Name")
-    br
-    label Id Number
-    input(type='text' name="id" placeholder="Product Id Number")
+  form
+    label Product Title
+    input(type='text' name="name" placeholder="Product Title")
     br
     label Price
-    input(type='text' name="price" placeholder="Product Price")
+    input(type='textarea' name="price" placeholder="Price")
     br
-    label Inventory
-    input(type='text' name="inventory" placeholder="Product Quantity")
+    label Quantity
+    input(type='text' name="inventory" placeholder="Quantity On Hand")
     br
-    button.btn.btn-success(type='submit') Submit
+    input#method(type="hidden" value="POST")
+    input#xhrUrl(type="hidden", value="http://localhost:8080/products/")
+    button(id="submitBtn") Submit
+  script(src="/client.products.js")

@@ -4,12 +4,17 @@ block title
 block content
   div
     header Edit Product
-    each val, key in product
-      label #{key}
-      input(type='text' name=key value='#{val}')
-      br
-      input#method(type="hidden", value="PUT")
-      input#xhrUrl(type="hidden", value="http://localhost:8080/products/#{product.id}")
+    label Name
+    input(type='text' name='name' value='#{product.name}')
+    br
+    label Price
+    input(type='text' name='price' value='#{product.price}')
+    br
+    label Inventory
+    input(type='text' name='inventory' value='#{product.inventory}')
+    br
+    input#method(type="hidden", value="PUT")
+    input#xhrUrl(type="hidden", value="http://localhost:8080/products/#{product.id}")
     button(id="submitBtn") Submit
   script(src="/client.products.js")
 

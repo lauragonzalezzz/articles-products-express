@@ -11,13 +11,10 @@ var headerVal = require('../middleware/header-validation');
 articlesRoute.post('/', headerVal(), validation({"title" : "string", "author" : "string", "body" : "string"}), function(req, res){
   var article = { "title" : req.body.title, "author" : req.body.author, "body" : req.body.body};
 
-  articleModule.add(article, function(err){
-    if (err){
-      return res.send({"success": false});
-    }
-    return res.send({"success": true});
+  articleModule.add(article);
+  console.log('Article: ' + article.title + ' has been added.');
+  res.redirect('/articles/');
   });
-});
 
 //PUT TITLE
 articlesRoute.put('/:title', headerVal(), validation({"title" : "string", "author" : "string", "body" : "string"}), function(req, res){
@@ -25,48 +22,47 @@ articlesRoute.put('/:title', headerVal(), validation({"title" : "string", "autho
   var updatedData = req.body;
   var url = encodeURIComponent(req.params.title);
 
-  articleModule.editByTitle(updatedData, url, function(err){
-    if (err){
-      return res.send({"success" : false });
-    }
-    return res.send({"success" : true });
-  });
+  articleModule.editByTitle(updatedData, url)
+  console.log('Article: ' + updatedData.title + ' has been updated');
+  res.redirect('/articles/');
 });
 
 //DELETE TITLE
-articlesRoute.delete('/:title', function(req, res){
-  var toDelete = encodeURIComponent(req.params.title);
+articlesRoute.get('/:title/delete', function(req, res){
+  var toDelete = req.params.title;
 
-  articleModule.deleteByTitle(toDelete, function(err){
-    if (err){
-      return res.send({"success": false, message : err.message });
-    }
-    return res.send({"success" : true });
-  });
+  articleModule.deleteByTitle(toDelete)
+  console.log('Article: ' + toDelete + ' has been deleted.');
+  res.redirect('/');
 });
 
 //GET
 articlesRoute.get('/', function(req, res){
 
-  articleModule.all(function(err, articles){
-    if (err){
-      return res.send({"success" : false });
+  articleModule.all()
+  .then(function(article){
+    return res.render('./articles/index', { "articles" : article });
+  })
+  .catch(function(err){
+    if (err) {
+      res.send(error);
     }
-    return res.render('./articles/index', { "articles" : articles });
-  });
-
+  })
 });
 
 //GET TITLE EDIT
 articlesRoute.get('/:title/edit', function(req, res){
-  var titleUrl = encodeURIComponent(req.params.title)
+  var title = req.params.title
 
-  articleModule.getByTitle(titleUrl, function(err, article){
+  articleModule.getByTitle(title)
+  .then(function(article){
+    return res.render('./articles/edit', { "article" : article[0] });
+  })
+  .catch(function(err){
     if (err){
-      return res.send({"success" : false });
+      console.error(err);
     }
-    return res.render('./articles/edit', { "article" : article });
-  });
+  })
 });
 
 //GET NEW

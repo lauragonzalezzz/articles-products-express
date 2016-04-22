@@ -9,67 +9,62 @@ var validation = require('../middleware/validation');
 productsRoute.use(bodyParser.urlencoded({extended: true}));
 
 //POST
-productsRoute.post('/', validation({"id" : "number", "name" : "string", "price" : "number", "inventory" : "number"}), function(req, res) {
+productsRoute.post('/', validation({"name" : "string", "price" : "number", "inventory" : "number"}), function(req, res) {
 
   var productData = { "id" : req.body.id, "name" : req.body.name, "price" : req.body.price, "inventory" : req.body.inventory};
 
-  productModule.add(productData, function(err){
-    if (err){
-      return res.send({ "success" : false });
-    }
-    return res.send({'success': true});
-  })
-
+  productModule.add(productData)
+  console.log('Product: ' + productData.name + ' added')
+  res.redirect('/products/');
 });
 
 //PUT ID
-productsRoute.put('/:id', validation({"id" : "number", "name" : "string", "price" : "number", "inventory" : "number"}), function(req, res){
+productsRoute.put('/:id', validation({"name" : "string", "price" : "number", "inventory" : "number"}), function(req, res){
 
   var updatedData = { "id" : req.body.id, "name" : req.body.name, "price" : req.body.price, "inventory" : req.body.inventory};
 
-  productModule.editById(updatedData, function(err){
-    if (err){
-      return res.send({"success" : false });
-    }
-    return res.send({'success': true});
-  });
-
+  productModule.editById(updatedData)
+  console.log('Product: ' + updatedData.name + ' has been updated');
+  res.redirect('/products/');
 });
 
-//DELETE ID
-productsRoute.delete('/:id', function(req, res){
+//DELETE BY ID
+productsRoute.get('/:id/delete', function(req, res){
 
   var productId = req.params.id;
 
-  productModule.deleteById(productId, function(err){
-    if (err){
-      return res.send({"success" : false });
-    }
-    return res.send({'success': true});
-  });
+  productModule.deleteById(productId)
+  console.log('Product: ' + productId + ' has been deleted.');
+  res.redirect('/products/');
 });
 
 //GET
 productsRoute.get('/', function(req, res){
 
-  productModule.all(function(err, products){
-    if (err){
-      return res.send({"success" : false });
+  productModule.all()
+  .then(function(products){
+    return res.render('./products/index', { "products" : products });
+  })
+  .catch(function(err){
+    if (err) {
+      res.send(error);
     }
-    res.render('./products/index', { "products" : products });
-  });
+  })
 });
 
 //GET ID EDIT
 productsRoute.get('/:id/edit', function(req, res){
-  var idNum = 'id' + req.params.id
+  var idNum = req.params.id
 
-  productModule.getById(idNum, function(err, product){
+  productModule.getById(idNum)
+  .then(function(product){
+    return res.render('./products/edit', { "product" : product[0] });
+  })
+  .catch(function(err){
     if (err){
-      return res.send({"success" : false });
+      console.error(err);
     }
-    res.render('./products/edit', { "product" : product });
-  });
+  })
 });
 
 //GET NEW

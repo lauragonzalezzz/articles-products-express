@@ -4,11 +4,16 @@ block title
 block content
   div
     header Edit Article
-    each val, key in article
-      label #{key}
-      input(type='text' name=key value='#{val}')
-      br
-      input#method(type="hidden", value="PUT")
-      input#xhrUrl(type="hidden", value="http://localhost:8080/articles/#{article.urlTitle}")
+    label Title
+    input(type='text' name='title' value='#{article.title}')
+    br
+    label Body
+    input(type='text' name='body' value='#{article.body}')
+    br
+    label Author
+    input(type='text' name='author' value='#{article.author}')
+    br
+    input#method(type="hidden", value="PUT")
+    input#xhrUrl(type="hidden", value="http://localhost:8080/articles/#{article.urltitle}")
     button(id="submitBtn") Submit
   script(src="/client.articles.js")
