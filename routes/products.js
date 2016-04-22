@@ -13,12 +13,13 @@ productsRoute.post('/', validation({"id" : "number", "name" : "string", "price" 
 
   var productData = { "id" : req.body.id, "name" : req.body.name, "price" : req.body.price, "inventory" : req.body.inventory};
 
-  productModule.add(productData, function(err){
-    if (err){
-      return res.send({ "success" : false });
-    }
-    return res.send({'success': true});
-  })
+  productModule.add(productData)
+  console.log('Product: ' + productData.name + ' added')
+  res.send({redirect : '/products/'});
+    // if (err){
+    //   return res.send({ "success" : false });
+    // }
+    // return res.send({'success': true});
 
 });
 
@@ -52,12 +53,15 @@ productsRoute.delete('/:id', function(req, res){
 //GET
 productsRoute.get('/', function(req, res){
 
-  productModule.all(function(err, products){
-    if (err){
-      return res.send({"success" : false });
+  productModule.all()
+  .then(function(products){
+    return res.render('./products/index', { "products" : products });
+  })
+  .catch(function(err){
+    if (err) {
+      res.send(error);
     }
-    res.render('./products/index', { "products" : products });
-  });
+  })
 });
 
 //GET ID EDIT
