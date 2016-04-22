@@ -92,25 +92,20 @@ module.exports = (function(data){
   };
 
   _deleteById = function(data, cb){
-    var productId = "id" + data;
-    fs.readFile('./db/products.js', function(err, data){
+    var productId = data;
 
-      var dbData = JSON.parse(data.toString());
-
-      if (err) {
-        return cb(err);
+    db.query('SELECT * FROM products WHERE products.id=' + productId)
+    .then(function(product){
+      if (product[0].id == productId){
+        return db.query('DELETE FROM products WHERE products.id=$1', [productId])
       }
-      delete dbData[productId];
-      dbData = JSON.stringify(dbData);
-
-      fs.writeFile('./db/products.js', dbData, function(err){
-
-        if (err) {
-          return cb(err);
-        }
-        return cb();
-      });
-    });
+      else {
+        console.log('Error: Product ' + productId + ' does not exist');
+      }
+    })
+    .catch(function(error){
+      console.error(error, 'this is an error inside the model');
+    })
   };
 
 
