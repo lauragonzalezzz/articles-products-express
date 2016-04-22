@@ -8,7 +8,7 @@ var validation = require('../middleware/validation');
 
 productsRoute.use(bodyParser.urlencoded({extended: true}));
 
-//POST
+//POST //DONE
 productsRoute.post('/', validation({"name" : "string", "price" : "number", "inventory" : "number"}), function(req, res) {
 
   var productData = { "id" : req.body.id, "name" : req.body.name, "price" : req.body.price, "inventory" : req.body.inventory};
@@ -58,14 +58,17 @@ productsRoute.get('/', function(req, res){
 
 //GET ID EDIT
 productsRoute.get('/:id/edit', function(req, res){
-  var idNum = 'id' + req.params.id
+  var idNum = req.params.id
 
-  productModule.getById(idNum, function(err, product){
+  productModule.getById(idNum)
+  .then(function(product){
+    return res.render('./products/edit', { "product" : product[0] });
+  })
+  .catch(function(err){
     if (err){
-      return res.send({"success" : false });
+      console.error(err);
     }
-    res.render('./products/edit', { "product" : product });
-  });
+  })
 });
 
 //GET NEW  //DONE
