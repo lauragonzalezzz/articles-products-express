@@ -24,7 +24,7 @@ productsRoute.post('/', validation({"id" : "number", "name" : "string", "price" 
 });
 
 //PUT ID
-productsRoute.put('/:id', validation({"id" : "number", "name" : "string", "price" : "number", "inventory" : "number"}), function(req, res){
+productsRoute.put('/:id', validation({"name" : "string", "price" : "number", "inventory" : "number"}), function(req, res){
 
   var updatedData = { "id" : req.body.id, "name" : req.body.name, "price" : req.body.price, "inventory" : req.body.inventory};
 
@@ -37,20 +37,17 @@ productsRoute.put('/:id', validation({"id" : "number", "name" : "string", "price
 
 });
 
-//DELETE ID
-productsRoute.delete('/:id', function(req, res){
+//DELETE BY ID
+productsRoute.get('/:id/delete', function(req, res){
 
   var productId = req.params.id;
 
-  productModule.deleteById(productId, function(err){
-    if (err){
-      return res.send({"success" : false });
-    }
-    return res.send({'success': true});
-  });
+  productModule.deleteById(productId)
+  console.log('Product: ' + productId + ' has been deleted.');
+  res.redirect('/products/');
 });
 
-//GET
+//GET  //DONE
 productsRoute.get('/', function(req, res){
 
   productModule.all()
@@ -76,7 +73,7 @@ productsRoute.get('/:id/edit', function(req, res){
   });
 });
 
-//GET NEW
+//GET NEW  //DONE
 productsRoute.get('/new', function(req, res){
   res.render('./products/new');
 });
