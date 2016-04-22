@@ -5,13 +5,13 @@ block content
   div
     header Edit Product
     label Name
-    input(type='text' name='name' value='#{article.name}')
+    input(type='text' name='name' value='#{product.name}')
     br
     label Price
-    input(type='text' name='price' value='#{article.price}')
+    input(type='text' name='price' value='#{product.price}')
     br
     label Inventory
-    input(type='text' name='inventory' value='#{article.inventory}')
+    input(type='text' name='inventory' value='#{product.inventory}')
     br
     input#method(type="hidden", value="PUT")
     input#xhrUrl(type="hidden", value="http://localhost:8080/products/#{product.id}")
