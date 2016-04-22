@@ -1,40 +1,43 @@
 var fs = require('fs');
+var pgp = require('pg-promise')();
+var dbConn = require('../private.json');
+var db = pgp(dbConn);
 
 module.exports = (function(data){
 
   _all = function(cb){
-    fs.readFile('./db/products.js', function(err, data){
-      if (err){
-        return cb(err);
-      }
-
-      var myData = JSON.parse(data.toString());
-      return cb(null, myData);
-    });
+    return db.query('SELECT * FROM products')
   };
 
   _add = function(data, cb){
 
     var productData = data;
-    fs.readFile('./db/products.js', function(err, data){
 
-      var dbData = JSON.parse(data.toString());
-
-      if (err) {
-        return cb(err);
+    return db.query('INSERT INTO products (id, name, price, inventory) values ($1, $2, $3, $4)', [productData.id, productData.name, productData.price, productData.inventory])
+    .catch(function(err){
+      if (err){
+        console.error(err);
       }
-      var id = "id" + productData.id;
-      dbData[id] = productData;
-      dbData = JSON.stringify(dbData);
+    })
+    // fs.readFile('./db/products.js', function(err, data){
 
-      fs.writeFile('./db/products.js', dbData, function(err){
+    //   var dbData = JSON.parse(data.toString());
 
-        if (err) {
-          return cb(err);
-        }
-        return cb();
-      });
-    });
+    //   if (err) {
+    //     return cb(err);
+    //   }
+    //   var id = "id" + productData.id;
+    //   dbData[id] = productData;
+    //   dbData = JSON.stringify(dbData);
+
+    //   fs.writeFile('./db/products.js', dbData, function(err){
+
+    //     if (err) {
+    //       return cb(err);
+    //     }
+    //     return cb();
+    //   });
+    // });
   };
 
   _getById = function(data, cb){
