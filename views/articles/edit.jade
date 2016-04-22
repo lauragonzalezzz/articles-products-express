@@ -15,9 +15,5 @@ block content
     br
     input#method(type="hidden", value="PUT")
     input#xhrUrl(type="hidden", value="http://localhost:8080/articles/#{article.urltitle}")
-    //- each val, key in article
-    //-   label #{key}
-    //-   input(type='text' name=key value='#{val}')
-    //-   br
     button(id="submitBtn") Submit
   script(src="/client.articles.js")
