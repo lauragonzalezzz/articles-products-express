@@ -9,18 +9,13 @@ var validation = require('../middleware/validation');
 productsRoute.use(bodyParser.urlencoded({extended: true}));
 
 //POST
-productsRoute.post('/', validation({"id" : "number", "name" : "string", "price" : "number", "inventory" : "number"}), function(req, res) {
+productsRoute.post('/', validation({"name" : "string", "price" : "number", "inventory" : "number"}), function(req, res) {
 
   var productData = { "id" : req.body.id, "name" : req.body.name, "price" : req.body.price, "inventory" : req.body.inventory};
 
   productModule.add(productData)
   console.log('Product: ' + productData.name + ' added')
-  res.send({redirect : '/products/'});
-    // if (err){
-    //   return res.send({ "success" : false });
-    // }
-    // return res.send({'success': true});
-
+  res.redirect('/products/');
 });
 
 //PUT ID
@@ -37,7 +32,7 @@ productsRoute.put('/:id', validation({"name" : "string", "price" : "number", "in
 
 });
 
-//DELETE BY ID
+//DELETE BY ID //DONE
 productsRoute.get('/:id/delete', function(req, res){
 
   var productId = req.params.id;
