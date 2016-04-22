@@ -23,13 +23,9 @@ productsRoute.put('/:id', validation({"name" : "string", "price" : "number", "in
 
   var updatedData = { "id" : req.body.id, "name" : req.body.name, "price" : req.body.price, "inventory" : req.body.inventory};
 
-  productModule.editById(updatedData, function(err){
-    if (err){
-      return res.send({"success" : false });
-    }
-    return res.send({'success': true});
-  });
-
+  productModule.editById(updatedData)
+  console.log('Product: ' + updatedData.name + ' has been updated');
+  res.redirect('/products/');
 });
 
 //DELETE BY ID //DONE
@@ -56,7 +52,7 @@ productsRoute.get('/', function(req, res){
   })
 });
 
-//GET ID EDIT
+//GET ID EDIT //DONE
 productsRoute.get('/:id/edit', function(req, res){
   var idNum = req.params.id
 
