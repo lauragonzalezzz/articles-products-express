@@ -24,40 +24,12 @@ module.exports = (function(data){
     return db.query('SELECT * FROM products WHERE id =$1', [idNum]);
   };
 
-  _editById = function(data, cb){
+  _editById = function(data){
     var updatedData = data;
-    var updatedId = "id" + updatedData.id;
 
-    fs.readFile('./db/products.js', function(err, data){
-
-      var dbData = JSON.parse(data.toString());
-
-      if (err) {
-        return cb(err);
-      }
-
-      var storedObj = dbData[updatedId];
-      if (updatedData.hasOwnProperty('name')){
-        storedObj.name = updatedData.name
-      }
-      if (updatedData.hasOwnProperty('price')){
-        storedObj.price = updatedData.price
-      }
-      if (updatedData.hasOwnProperty('inventory')){
-        storedObj.inventory = updatedData.inventory
-      }
-
-      dbData = JSON.stringify(dbData);
-
-      fs.writeFile('./db/products.js', dbData, function(err){
-
-        if (err) {
-          return cb(err);
-        }
-
-        cb();
-      });
-
+    return db.none('UPDATE products SET name=$1, price=$2, inventory=$3 WHERE name=$4', [updatedData.name, updatedData.price, updatedData.inventory, updatedData.name])
+    .catch(function(err){
+        console.error(err);
     });
   };
 
