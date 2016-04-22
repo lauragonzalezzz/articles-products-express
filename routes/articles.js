@@ -13,7 +13,7 @@ articlesRoute.post('/', headerVal(), validation({"title" : "string", "author" : 
 
   articleModule.add(article);
   console.log('Article: ' + article.title + ' has been added.');
-  res.send({redirect : '/articles/'});
+  res.redirect('/articles/');
   });
 
 //PUT TITLE
@@ -24,7 +24,7 @@ articlesRoute.put('/:title', headerVal(), validation({"title" : "string", "autho
 
   articleModule.editByTitle(updatedData, url)
   console.log('Article: ' + updatedData.title + ' has been updated');
-  res.send({redirect : '/articles/'});
+  res.redirect('/articles/');
 });
 
 //DELETE TITLE
