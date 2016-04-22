@@ -25,44 +25,17 @@ module.exports = (function(data){
     return db.query('SELECT * FROM articles WHERE title =$1', [titleUrl]);
   };
 
-  _editByTitle = function(data, url, cb){
-    console.log('in model - edit by title');
-    var updatedData = data;
-    var oldUrl = url;
+  _editByTitle = function(data, url){
+    var updatedArticle = data;
+    var oldTitle = decodeURIComponent(url);
+    var newUrlTitle = encodeURIComponent(updatedArticle.title);
+    updatedArticle['urlTitle'] = newUrlTitle;
 
-    fs.readFile('./db/articles.js', function(err, data){
-
-      var dbData = JSON.parse(data.toString());
-      if (err) {
-        return cb(err);
+    db.none('UPDATE articles SET title=$1, body=$2, author=$3, urltitle=$4 WHERE title=$5', [updatedArticle.title, updatedArticle.body, updatedArticle.author, updatedArticle.urlTitle, oldTitle])
+    .catch(function(err){
+      if (err){
+        console.error(err);
       }
-      if (!dbData[oldUrl]){
-        return cb(err);
-      }
-
-      var newUrlTitle = encodeURIComponent(updatedData.title);
-      var storedObj = {};
-      storedObj = dbData[oldUrl];
-
-      storedObj.urlTitle = newUrlTitle;
-      if (updatedData.hasOwnProperty('title')){
-        storedObj.title = updatedData.title
-      }
-      if (updatedData.hasOwnProperty('body')){
-        storedObj.body = updatedData.body
-      }
-      if (updatedData.hasOwnProperty('author')){
-        storedObj.author = updatedData.author
-      }
-      dbData[newUrlTitle] = storedObj;
-      dbData = JSON.stringify(dbData);
-      fs.writeFile('./db/articles.js', dbData, function(err){
-
-        if (err) {
-          return cb(err);
-        }
-        return cb();
-      });
     });
   };
 
