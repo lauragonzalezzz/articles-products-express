@@ -7,7 +7,7 @@ var validation = require('../middleware/validation');
 var headerVal = require('../middleware/header-validation');
 
 
-//POST //DONE
+//POST
 articlesRoute.post('/', headerVal(), validation({"title" : "string", "author" : "string", "body" : "string"}), function(req, res){
   var article = { "title" : req.body.title, "author" : req.body.author, "body" : req.body.body};
 
@@ -27,17 +27,16 @@ articlesRoute.put('/:title', headerVal(), validation({"title" : "string", "autho
   res.redirect('/');
 });
 
-//DELETE TITLE //DONE
+//DELETE TITLE
 articlesRoute.get('/:title/delete', function(req, res){
   var toDelete = req.params.title;
 
-  //sends delete request
   articleModule.deleteByTitle(toDelete)
   console.log('Article: ' + toDelete + ' has been deleted.');
   res.redirect('/');
 });
 
-//GET  //DONE
+//GET
 articlesRoute.get('/', function(req, res){
 
   articleModule.all()
@@ -51,7 +50,7 @@ articlesRoute.get('/', function(req, res){
   })
 });
 
-//GET TITLE EDIT //DONE
+//GET TITLE EDIT
 articlesRoute.get('/:title/edit', function(req, res){
   var title = req.params.title
 
@@ -66,7 +65,7 @@ articlesRoute.get('/:title/edit', function(req, res){
   })
 });
 
-//GET NEW  //DONE
+//GET NEW
 articlesRoute.get('/new', function(req, res){
   res.render('./articles/new');
 });
