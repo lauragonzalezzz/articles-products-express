@@ -8,7 +8,7 @@ var validation = require('../middleware/validation');
 
 productsRoute.use(bodyParser.urlencoded({extended: true}));
 
-//POST //DONE
+//POST
 productsRoute.post('/', validation({"name" : "string", "price" : "number", "inventory" : "number"}), function(req, res) {
 
   var productData = { "id" : req.body.id, "name" : req.body.name, "price" : req.body.price, "inventory" : req.body.inventory};
@@ -28,7 +28,7 @@ productsRoute.put('/:id', validation({"name" : "string", "price" : "number", "in
   res.redirect('/products/');
 });
 
-//DELETE BY ID //DONE
+//DELETE BY ID
 productsRoute.get('/:id/delete', function(req, res){
 
   var productId = req.params.id;
@@ -38,7 +38,7 @@ productsRoute.get('/:id/delete', function(req, res){
   res.redirect('/products/');
 });
 
-//GET  //DONE
+//GET
 productsRoute.get('/', function(req, res){
 
   productModule.all()
@@ -52,7 +52,7 @@ productsRoute.get('/', function(req, res){
   })
 });
 
-//GET ID EDIT //DONE
+//GET ID EDIT
 productsRoute.get('/:id/edit', function(req, res){
   var idNum = req.params.id
 
@@ -67,7 +67,7 @@ productsRoute.get('/:id/edit', function(req, res){
   })
 });
 
-//GET NEW  //DONE
+//GET NEW
 productsRoute.get('/new', function(req, res){
   res.render('./products/new');
 });
